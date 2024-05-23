@@ -15,7 +15,11 @@ import lombok.Data;
 @Entity
 @Data
 public class Pointing {
-	public Pointing(Integer id2, LocalDateTime dateHour2, String type2, File image2) {
+	public Pointing() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Pointing(Integer id2, LocalDateTime dateHour2, String service2) {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -25,16 +29,31 @@ public class Pointing {
 	private Integer id;
 	@Column(nullable = false)
 	private LocalDateTime dateHour;
+
 	@Column(nullable = false)
-	private String type;
-	@Column(nullable = false)
-	private File image;
-	
-	 @ManyToOne
-	 @JoinColumn(name = "emp_id")
-	 private User employee;
-	
-	
-	
+	private String service;
+
+
+	@ManyToOne
+	@JoinColumn(name = "emp_id")
+	private User employee;
+
+
+	public Pointing(User employee, LocalDateTime dateHour, String service) {
+		this.employee = employee;
+		this.dateHour = dateHour;
+		this.service = service;
+	}
+
+	public Pointing(Integer id2, LocalDateTime dateHour2, String service2, Object employee2) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public User getEmployee(User employee) {
+		return employee;
+	}
+
+
+
 
 }

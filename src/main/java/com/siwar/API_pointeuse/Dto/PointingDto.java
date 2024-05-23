@@ -1,10 +1,11 @@
 package com.siwar.API_pointeuse.Dto;
 
-import java.io.File;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.siwar.API_pointeuse.entity.Pointing;
+import com.siwar.API_pointeuse.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,12 +17,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PointingDto {
+	public PointingDto(Integer id2, LocalDateTime dateHour2, String service2, User employee) {
+		// TODO Auto-generated constructor stub
+	}
 	private Integer id;
 	private LocalDateTime dateHour;
-	private String type;
-	private File image;
-	
-	
+	private String service;
+	public Object getEmployee() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 
 
 }

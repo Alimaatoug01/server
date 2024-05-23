@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,30 +16,36 @@ import lombok.*;
 @Data
 public class User {
 
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-
 	private Long id;
-	@Column(nullable = false)
+
+	@Column(nullable = true)
 	private String username;
-	@Column(nullable = false)
+
+	@Column(nullable = true)
 	private String password;
 
 	@Temporal(TemporalType.DATE)
 	private Date dateBirth;
-	@Column(nullable = false)
+
+	@Column(nullable = true)
 	private String email;
+
 	@Column(nullable = true)
 	private String phoneNumber;
+
 	@Column(nullable = true)
 	private String job;
+
 	private Role role;
+
 	@OneToMany()
 	private List<Notification> notifications= new ArrayList<>();
 
 	@OneToMany()
 	private List<Pointing> pointings= new ArrayList<>();
+
 	@OneToMany()
 	private List<Leave> leaves= new ArrayList<>();
 
@@ -52,4 +57,13 @@ public class User {
 	@OneToMany()
 	private List<Assiduity> assiduities= new ArrayList<>();
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties("user")
+	@ToString.Exclude // Exclude this field from toString() to avoid StackOverflowError
+	private List<DemandeConge> demandeConges = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties("user")
+	@ToString.Exclude // Exclude this field from toString() to avoid StackOverflowError
+	private List<Reclamation> reclamations = new ArrayList<>();
 }
