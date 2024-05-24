@@ -39,8 +39,8 @@ public class DemandeCongeController {
         Optional<DemandeConge> optionalDemandeConge = demandeCongeService.getDemandeCongeById(id);
         if (optionalDemandeConge.isPresent()) {
             DemandeConge demandeConge = optionalDemandeConge.get();
-            demandeConge.setStartDate(demandeCongeDetails.getStartDate());
-            demandeConge.setEndDate(demandeCongeDetails.getEndDate());
+            // demandeConge.setStartDate(demandeCongeDetails.getStartDate());
+            // demandeConge.setEndDate(demandeCongeDetails.getEndDate());
             demandeConge.setConfirmed(demandeCongeDetails.isConfirmed());
             return ResponseEntity.ok(demandeCongeService.saveDemandeConge(demandeConge));
         } else {
