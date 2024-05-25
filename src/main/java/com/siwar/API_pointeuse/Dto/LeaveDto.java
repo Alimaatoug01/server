@@ -3,7 +3,6 @@ package com.siwar.API_pointeuse.Dto;
 import java.util.Date;
 
 import com.siwar.API_pointeuse.entity.Leave;
-import com.siwar.API_pointeuse.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,11 +14,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LeaveDto {
-    private Integer id;
-    private String type;
-    private Date startDate;
-    private Date endDate;
-    private UserDto employee;
+	private Integer id;
+	private String type;
+	private Date startDate;
+	private Date endDate;
+
 
 
 

@@ -42,7 +42,8 @@ public class DemandeCongeController {
             // demandeConge.setStartDate(demandeCongeDetails.getStartDate());
             // demandeConge.setEndDate(demandeCongeDetails.getEndDate());
             demandeConge.setConfirmed(demandeCongeDetails.isConfirmed());
-            return ResponseEntity.ok(demandeCongeService.saveDemandeConge(demandeConge));
+
+            return ResponseEntity.ok(demandeCongeService.updateDemandeCongeStatus(id, demandeCongeDetails.isConfirmed()));
         } else {
             return ResponseEntity.notFound().build();
         }

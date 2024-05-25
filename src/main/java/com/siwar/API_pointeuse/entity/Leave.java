@@ -32,7 +32,7 @@ public class Leave {
 	private Date endDate;
 	
 	  @ManyToOne
-	  @JoinColumn(name = "emp_id")
+		@JoinColumn(name = "emp_id")
 	  private User employee;
 
 }

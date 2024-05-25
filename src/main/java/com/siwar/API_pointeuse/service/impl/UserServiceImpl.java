@@ -1,15 +1,18 @@
 package com.siwar.API_pointeuse.service.impl;
 
 import com.siwar.API_pointeuse.Dto.UserDto;
+import com.siwar.API_pointeuse.entity.ResetPasswordToken;
 import com.siwar.API_pointeuse.entity.Role;
 import com.siwar.API_pointeuse.entity.Team;
 import com.siwar.API_pointeuse.entity.User;
 import com.siwar.API_pointeuse.mapper.UserMapper;
+import com.siwar.API_pointeuse.repos.ResetPasswordTokenRepos;
 import com.siwar.API_pointeuse.repos.TeamRepos;
 import com.siwar.API_pointeuse.repos.UserRepos;
 import com.siwar.API_pointeuse.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,12 @@ public class UserServiceImpl  implements UserService {
     private final UserRepos userRepository;
 
     private final TeamRepos teamRepository;
+
+    @Autowired
+    private ResetPasswordTokenRepos resetPasswordTokenRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     public UserServiceImpl(UserRepos userRepository, TeamRepos teamRepository) {
 
@@ -46,8 +55,15 @@ public class UserServiceImpl  implements UserService {
 
     @Override
     public UserDto getById(Integer id) {
-        return null;
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return UserMapper.mapToUserDto(user);
+        }
+        return null; // Or throw an exception if the user is not found
     }
+
+
 
     @Override
     public UserDto getByDate(String date) {
@@ -145,6 +161,28 @@ public class UserServiceImpl  implements UserService {
         return userRepository.findByEmail(email);
 
 
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.findByEmail(email) != null;
+    }
+
+    @Override
+    public ResetPasswordToken createResetPasswordToken(User user) {
+        ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user);
+        return resetPasswordTokenRepository.save(resetPasswordToken);
+    }
+    @Override
+    public ResetPasswordToken findByResetPasswordToken(String token) {
+        return resetPasswordTokenRepository.findByToken(token);
+    }
+
+    @Override
+    public void resetPassword(String email, String password) {
+        User user = findByEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.siwar.API_pointeuse.service;
 import java.util.List;
 
 import com.siwar.API_pointeuse.Dto.UserDto;
+import com.siwar.API_pointeuse.entity.ResetPasswordToken;
 import com.siwar.API_pointeuse.entity.Role;
 import com.siwar.API_pointeuse.entity.User;
 
@@ -25,5 +26,11 @@ public interface UserService {
 	List<UserDto> getByRole(Role role);
 
 	int getCountByRole(Role rh);
+
+	ResetPasswordToken createResetPasswordToken(User user);
+	ResetPasswordToken findByResetPasswordToken(String token);
+	void resetPassword(String emailAddress, String newPassword);
+	boolean existsByEmail(String email);
+
 
 }

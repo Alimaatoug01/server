@@ -19,7 +19,7 @@ public interface NotificationService {
 	 NotificationDto update(NotificationDto notificationDto, Integer id);
 	 
 	 List<NotificationDto> getAll();*/
-	 
-	 
+
+    void sendResetPasswordEmail(String emailAddress, String token);
 
 }

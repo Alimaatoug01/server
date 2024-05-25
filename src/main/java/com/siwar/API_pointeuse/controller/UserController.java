@@ -1,12 +1,16 @@
 package com.siwar.API_pointeuse.controller;
 
 import com.siwar.API_pointeuse.Dto.UserDto;
+import com.siwar.API_pointeuse.entity.ResetPasswordToken;
 import com.siwar.API_pointeuse.entity.Role;
 import com.siwar.API_pointeuse.entity.User;
+import com.siwar.API_pointeuse.payload.request.ForgotPasswordEmailRequest;
 import com.siwar.API_pointeuse.payload.request.LoginRequest;
+import com.siwar.API_pointeuse.payload.response.ApiResponse;
 import com.siwar.API_pointeuse.payload.response.JwtResponse;
 import com.siwar.API_pointeuse.security.jwt.JwtUtils;
 import com.siwar.API_pointeuse.security.services.UserDetailsImpl;
+import com.siwar.API_pointeuse.service.NotificationService;
 import com.siwar.API_pointeuse.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +37,8 @@ public class UserController {
     AuthenticationManager authenticationManager;
     @Autowired
     PasswordEncoder encoder;
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -154,6 +161,33 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping(path = "/sendForgotPasswordEmail", produces = "application/json")
+    public ResponseEntity<?> sendForgotPasswordEmail(@Valid @RequestBody ForgotPasswordEmailRequest request) {
+        if (userService.existsByEmail(request.getForgotPasswordEmail())) {
+            User user = userService.findByEmail(request.getForgotPasswordEmail());
+            ResetPasswordToken resetPasswordToken = userService.createResetPasswordToken(user);
+            notificationService.sendResetPasswordEmail(request.getForgotPasswordEmail(), resetPasswordToken.getToken());
+            return ResponseEntity.ok(new ApiResponse("Please check your email for a password reset link", true));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("Email not found", false));
+        }
+    }
+
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ForgotPasswordEmailRequest request) {
+        ResetPasswordToken resetPasswordToken = userService.findByResetPasswordToken(request.getToken());
+        if (resetPasswordToken == null) throw new RuntimeException("Invalid token");
+
+        Calendar calendar = Calendar.getInstance();
+        if ((resetPasswordToken.getExpiredAt().getTime() - calendar.getTime().getTime()) <= 0) {
+            throw new RuntimeException("Link expired. Generate new link from http://localhost:3000/signup");
+        }
+
+        userService.resetPassword(request.getForgotPasswordEmail(), request.getNewPassword());
+        return ResponseEntity.ok(new ApiResponse("Password reset successfully", true));
     }
 
 }

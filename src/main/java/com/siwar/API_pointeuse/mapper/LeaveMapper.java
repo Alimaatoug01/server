@@ -10,7 +10,7 @@ public class LeaveMapper {
 				leave.getId(),
 				leave.getType(),
 				leave.getStartDate(),
-				leave.getEndDate(), null
+				leave.getEndDate()
 		);
 	}
 	

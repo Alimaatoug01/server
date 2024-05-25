@@ -17,20 +17,20 @@ public class DemandeConge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate startDate;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate endDate;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean confirmed;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = true)
     @JsonIgnoreProperties("leaves")
     private User user;
 }
